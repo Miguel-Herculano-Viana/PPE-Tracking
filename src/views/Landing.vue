@@ -2,10 +2,10 @@
     <div class = "body">
         <div class="top_stripe"></div>
         <section id="Landing" class="landing">
-            <img src="../assets/Gemini_Generated_Image_zi29uhzi29uhzi29 1.png" class="banner_image" />
+            <img src="../assets/Gemini_Generated_Image_zi29uhzi29uhzi29 1.png" class="banner_image"> <img/>
             <div class="information_esq">
                 <div class="selector">
-                    <img src="../assets/Group 2.png"></img>
+                    <img src="../assets/Group 2.png" class="logo"></img>
                     <div src="product_info">
                         <h1 class="Texto_opcao1">
                             Our Product
@@ -30,31 +30,43 @@
 </template>
 
 <style>
-.body {
+
+body {
     background-color: white;
-    display: grid;
-    flex-direction: column;
-    justify-content: center;
-    height: auto;
-    width: auto;
+    width: 100%;
+    height: 100%;
 }
 
 .top_stripe {
-    background-color: #8B8B8BFF;
-    width: 100%;
-    padding-top: 0%;
-    z-index: 9;
+    background-color: #8B8B8B;
+    width: 100vw;
+    height: 3vh;
+    z-index: 1;
 }
 
-.banenr_image{
+.banner_image{
     z-index: 0;
+    width: 50%;
+    height: 50%;
 }
 
 .information_esq {
     background-color: #D9D9D9FF;
-    height: 80%;
-    width: 20%;
-    margin-left: 0%;
+    width: 15%;
+    height: 55vh;
+    margin-left: 20%;
 }
 
+.logo {
+    width: 50%;
+    height: 50%;
+}
+
+.information_dir {
+    background-color: #D9D9D9FF;
+    width: 10%;
+    height: 10%;
+    z-index: 10;
+    margin-right: auto;
+}
 </style>
