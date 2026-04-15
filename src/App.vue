@@ -1,8 +1,10 @@
-  <script setup>
+  <script>
     import Landing from './views/Landing.vue';
   </script>
 
 <template>
-  <Landing />
+  <div>
+    <router-view />
+  </div>
 </template>
 

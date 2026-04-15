@@ -1,6 +1,21 @@
+<script>
+import { useRouter } from 'vue-router'
+export default {
+    name: "Landing"
+}
+
+</script>
+
 <template>
     <div class = "body">
-        <div class="top_stripe"></div>
+        <div class="top_stripe">
+            <router-link class="login" to="/Login">
+                <button class="botao_login"> Login </button>
+            </router-link>
+            <router-link class="logon" to="/Logon">
+                <button class="botao_logon"> Logon </button>
+            </router-link>
+        </div>
         <section id="Landing" class="landing">
             <img src="../assets/Gemini_Generated_Image_zi29uhzi29uhzi29 1.png" class="banner_image"> <img/>
             <div class="information_esq">
@@ -43,6 +58,8 @@ body {
     height: 3vh;
     z-index: 1;
 }
+
+
 
 .banner_image{
     z-index: 0;
