@@ -9,12 +9,14 @@ export default {
 <template>
     <div class = "body">
         <div class="top_stripe">
-            <router-link class="login" to="/Login">
-                <button class="botao_login"> Login </button>
-            </router-link>
-            <router-link class="logon" to="/Logon">
-                <button class="botao_logon"> Logon </button>
-            </router-link>
+            <div class="buttons">
+                <router-link class="login" to="/Login">
+                    <button class="botao_login"> Login </button>
+                </router-link>
+                <router-link class="logon" to="/Logon">
+                    <button class="botao_logon"> Logon </button>
+                </router-link>
+            </div>
         </div>
         <section id="Landing" class="landing">
             <img src="../assets/Gemini_Generated_Image_zi29uhzi29uhzi29 1.png" class="banner_image"> <img/>
@@ -22,19 +24,25 @@ export default {
                 <div class="selector">
                     <img src="../assets/Group 2.png" class="logo"></img>
                     <div src="product_info">
+                        <button class="Our_P">
                         <h1 class="Texto_opcao1">
                             Our Product
                         </h1>
+                        </button>
                     </div>
                     <div class="about_us">
-                        <h1 class="Texto_opcao2">
-                            About Us
-                        </h1>
+                        <button class="Abt_us">
+                            <h1 class="Texto_opcao2">
+                                About Us
+                            </h1>
+                        </button>
                     </div>
                     <div class="contacts">
-                        <h1 class="Texto_opcao3">
-                            Contacts
-                        </h1>
+                        <button class="cont">
+                            <h1 class="Texto_opcao3">
+                                Contacts
+                            </h1>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -60,7 +68,6 @@ body {
 }
 
 
-
 .banner_image{
     z-index: 0;
     width: 50%;
@@ -69,7 +76,7 @@ body {
 
 .information_esq {
     background-color: #D9D9D9FF;
-    width: 15%;
+    width: 10%;
     height: 55vh;
     margin-left: 20%;
 }
@@ -77,6 +84,8 @@ body {
 .logo {
     width: 50%;
     height: 50%;
+    margin-top: 20%;
+    margin-bottom: 20%;
 }
 
 .information_dir {
@@ -85,5 +94,55 @@ body {
     height: 10%;
     z-index: 10;
     margin-right: auto;
+}
+
+.Product_info{
+    height: 10px%;
+}
+
+.Our_P {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9D9D9FF;
+    width: 100%;
+    height: 50px;
+}
+
+.Texto_opcao1 {
+    font-size: 24px;
+    color: black;
+}
+
+.Abt_us {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9D9D9FF;
+    width: 100%;
+    height: 50px;
+}
+
+.Texto_opcao2 {
+    font-size: 24px;
+    color: black;
+}
+
+.cont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9D9D9FF;
+    width: 100%;
+    height: 50px;
+}
+
+.Texto_opcao3 {
+    font-size: 24px;
+    color: black;
+}
+
+.buttons {
+    padding-left: 90%;
 }
 </style>
