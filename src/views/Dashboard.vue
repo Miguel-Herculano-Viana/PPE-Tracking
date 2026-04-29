@@ -5,5 +5,14 @@ export default {
 }
 </script>
 <template>
-    <h1>hello</h1>
+    <body>
+        <img src="../assets/Group 2.png">
+        <section class="selector">
+            <button>Users</button>
+            <button>PPEs</button>
+            <button>Reports</button>
+            <button>Storage</button>
+            <button>Requisitions</button>
+        </section>
+    </body>
 </template>

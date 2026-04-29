@@ -14,10 +14,10 @@ export default {
                 <input type="text">
             </form>
             <form action="" method="get" class="Password">
-                <label for="Password">Password</label>
-                <input type="text">
+                <label for="Password">Password: </label>
+                <input type="text" class="Password_form">
             </form>
-            <button class="Login"><p>Login</p></button>
+            <button type="submit" class="Login"><p>Login</p></button>
         </section>
     </body>
 </template>
