@@ -7,7 +7,6 @@ export default {
 
 <template>
     <body>
-        <h1>HELLO WORLD</h1>
         <header class="gray_stripe">
             <nav>
                 <ul>
@@ -28,6 +27,6 @@ export default {
     </body>
 </template>
 
-<style>
+<style scoped>
 /*  */
 </style>

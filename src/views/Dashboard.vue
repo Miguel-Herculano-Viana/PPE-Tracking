@@ -5,7 +5,7 @@ export default {
 }
 </script>
 <template>
-    <body>
+    <aside>
         <img src="../assets/Group 2.png">
         <section class="selector">
             <button>Users</button>
@@ -14,5 +14,5 @@ export default {
             <button>Storage</button>
             <button>Requisitions</button>
         </section>
-    </body>
+    </aside>
 </template>
