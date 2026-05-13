@@ -6,7 +6,6 @@ export default {
 </script>
 
 <template>
-        <img src="../assets/Group 2.png">
     <header class="Utility_bar">
         <form action="" method="get" class="Search">
                 <label for="Name">Search: </label>

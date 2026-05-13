@@ -8,21 +8,20 @@ export default {
 <template>
     <body>
         <header class="gray_stripe">
-            <nav>
-                <ul>
-                    <li><a href="/Login">Login</a></li>
-                    <li><a href="/Logon">Logon</a></li>
-                </ul>
-            </nav>
+            <RouterLink to="/Login">Login</RouterLink>
+            <RouterLink to="/Logon">Logon</RouterLink>
         </header>
         <main>
             <img src="../assets/Gemini_Generated_Image_zi29uhzi29uhzi29 1.png">
-            <section class="Selection">
-                <img src="../assets/Group 2.png" alt="">
-                <button class="Our_Product"><p>Our_Product</p></button>
-                <button class="About_Us"><p>About Us</p></button>
-                <button class="Contacts"><p>Contacts</p></button>
-            </section>
+            <nav class="Selection">
+                <img src="../assets/Group 2.png" alt=""> 
+                <RouterLink to="/Our_Product"> Our Product </RouterLink>
+                <RouterLink to="/About_Us"> About Us </RouterLink>
+                <RouterLink to="/Contacts"> Contacts </RouterLink>
+            </nav>
+            <main class="content">
+                <RouterView />
+            </main>
         </main>
     </body>
 </template>

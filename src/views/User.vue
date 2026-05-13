@@ -5,13 +5,12 @@ export default {
 }
 </script>
 <template>
-    <img src="../assets/Group 2.png">
     <header class="Utility_bar">
         <form action="" method="get" class="Search">
                 <label for="Name">Search: </label>
-                <input type="text">
+                <input type="text" class="input">
         </form>
-        <button>Create New</button>
+        <button class="button">Create New</button>
     </header>
     <section class="Label_Bar">
         <h3>ID</h3>
@@ -45,3 +44,45 @@ export default {
         </th>
     </tr>
 </template>
+<style scoped>
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Utility_bar {
+    display: flex;
+    background-color: #8B8B8B;
+    height: 5vh;
+    padding: 1%;
+    outline-color: #000000;
+    outline-width: 1px;
+    outline-style: solid;
+    color: #000000;
+}
+.Label_Bar {
+    display: flex;
+    background-color: #8B8B8B;
+    outline-color: #000000;
+    outline-width: 1px;
+    outline-style: solid;
+    justify-content: space-between;
+    padding-left: 2%;
+    padding-right: 10%;
+    color: #000000;
+}
+.input {
+    background-color: #ffffff;
+    color:#000000;
+}
+.button {
+    margin-left: 1%;
+    width: 80px;
+    height: 25px;
+    background-color: #DBDBDB;
+    color: #000000;
+    outline-color: #B7B3B3;
+    outline-width: 1px;
+    outline-style: solid;
+}
+</style>

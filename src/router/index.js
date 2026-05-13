@@ -13,14 +13,29 @@ import PPE from '../views/PPE.vue'
 import Report from '../views/Report.vue'
 import Reposition from '../views/Reposition_req.vue'
 import User from '../views/User.vue'
+import { useSupabase } from '../composables/useSupabase.js'
 
 const routes = [
-    {path: '/', component: Landing},
+    {path: '/', 
+        component: Landing,
+        children: [
+            {path: '/About_Us', component: About_Us},
+            {path: '/Contacts', component: Contacts},
+            {path: '/Our_Product', component: Our_Product}
+        ]
+    },
+    {path: '/Dashboard',
+        component: Dashboard,
+        children: [
+            {path: '/User', component: User},
+            {path: '/Borrow', component: Borrow},
+            {path: '/Integrity', component: Integrity},
+            {path: '/PPE', component: PPE},
+            {path: '/Report', component: Report}
+        ]
+    },
     {path: '/Login', component: Login},
     {path: '/Logon', component: Logon},
-    {path: '/About_Us', component: About_Us},
-    {path: '/Contacts', component: Contacts},
-    {path: '/Our_Product', component: Our_Product},
     {path: '/Dashboard', component: Dashboard},
     {path: '/Borrow', component: Borrow},
     {path: '/Integrity', component: Integrity},
