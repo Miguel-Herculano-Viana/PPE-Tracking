@@ -73,7 +73,7 @@ export default {
     outline-color: #E8E8E8;
     outline-width: 1px;
     outline-style: solid;
-    color: #000000;
+    color: #000000; 
     text-decoration: none;
 }
 .content {

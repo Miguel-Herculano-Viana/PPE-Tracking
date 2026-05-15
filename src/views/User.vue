@@ -13,36 +13,47 @@ export default {
         <button class="button">Create New</button>
     </header>
     <section class="Label_Bar">
+        <form @submit.prevent class="form_label">
+            <div class="form-group">
+                <input v-model="form.nome_usuario" type="text" id="nome" placeholder="Insert the name" required>
+            </div>
+            <div class="form-group">
+                <input v-model="form.numero_registro_usuario" type="number" id="NRU" placeholder="Insert the Negister Number">
+            </div>
+            <div class="form-group">
+                <input v-model="form.funcao" type="checkbox" id="Employee"><label for="Employee">Employee</label>
+                <input v-model="form.funcao" type="checkbox" id="Student"><label for="Student">Student</label>
+                <input v-model="form.funcao" type="checkbox" id="Visitor"><label for="Visitor">Visitor</label>
+            </div>
+            <div class="form-group">
+                <input v-model="form.funcao" type="checkbox" id="ADM"><label for="ADM">ADM</label>
+                <input v-model="form.funcao" type="checkbox" id="MOD"><label for="MOD">MOD</label>
+                <input v-model="form.funcao" type="checkbox" id="ALMOX"><label for="ALMOX">ALMOX</label>
+            </div>
+            <div class="action-bar">
+                <button type="submit" class="btn-primary">
+                    {{ editandoID ? 'Update Info' : 'End Register' }}
+                </button>
+                <button v-if="editandoID" type="button" @click="cancelarEdicao" class="btn-outline">
+                    Cancel
+                </button>
+            </div>
+        </form>
         <h3>ID</h3>
         <h3>Name</h3>
         <h3>Register Number</h3>
         <h3>Function</h3>
     </section>
-    <tr>
-        <th>00000</th>
-        <th>0000000000000000000000000000000000000</th>
-        <th>0000000000000000000000000000000000000</th>
-        <th>
-            <form>
-                <input type="checkbox" id="Employee">
-                <label for="Employee">Employee</label><br>
-                <input type="checkbox" id="Student">
-                <label for="Student">Student</label><br>
-                <input type="checkbox" id="Visitor">
-                <label for="Visitor">Visitor</label><br>
-                <input type="checkbox" id="ADM">
-                <label for="ADM">ADM</label><br>
-                <input type="checkbox" id="MOD">
-                <label for="MOD">MOD</label><br>
-                <input type="checkbox" id="ALMOX">
-                <label for="ALMOX">ALMOX</label><br>
-            </form>
-        </th>
-        <th>
-            <button>Edit</button>
-            <button>Delete</button>
-        </th>
-    </tr>
+    <section class="card-table">
+        <table class="styled-table">
+            <tbody>
+                <tr v-for="f in usuarios":key=f.id_Usuario>
+                    <!-- continuar aqui -->
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
 </template>
 <style scoped>
 *{
