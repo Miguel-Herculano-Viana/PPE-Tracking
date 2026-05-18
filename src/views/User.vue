@@ -1,9 +1,3 @@
-<script>
-import { useRouter } from 'vue-router'
-export default {
-    name: "User"
-}
-</script>
 <template>
     <header class="Utility_bar">
         <form action="" method="get" class="Search">
@@ -48,13 +42,67 @@ export default {
         <table class="styled-table">
             <tbody>
                 <tr v-for="f in usuarios":key=f.id_Usuario>
-                    <!-- continuar aqui -->
+                    <td><span class="text-bold">{{ f.nome }}</span></td>
+                    <td>{{ f.numero_registro_usuario }}</td>
+                    <td class="badge">{{ f.function }}</td>
+                    <td class="text-center">
+                        <button @click="prepararEdicao(f)" class="btn-action edit">Edit</button>
+                        <button @click="excluir(f.id)" class="btn-action delete">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </section>
 
 </template>
+
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
+import { useSupabase} from '../composables/useSupabase';
+const { supabase } = useSupabase();
+
+const usuarios = ref([]);
+const editandoID = ref(null);
+const form = reactive({
+    nome: '',
+    numero_registro_usuario: '',
+    funcao: ''
+});
+
+const carregar = async () => {
+    const { data, error } = await supabase.from('usuarios').select('*').order('nome');
+    if (error) {
+        console.error('Error to load:', error.message);
+    } else {
+        funcionarios.value = data || []
+    }
+};
+
+const prepararEdicao = (f) => {
+    editandoID.value = f.id;
+    Object.assign(form, {
+        nome: f.nome,
+        numero_registro_usuario: f.numero_registro_usuario,
+        funcao: f.funcao
+    })
+};
+
+const excluir = async (id) => {
+    if (confirm('Are you sure you want to delete this user?')) {
+        await supabase.from('usuarios').delete().eq('id', id);
+        carregar();
+    }
+};
+
+const cancelarEdicao = () => {
+    editandoID.value = null;
+    Object.assign(form, { nome: '', matricula: '', funcao: '' });
+};
+
+onMounted(carregar);
+
+</script>
+
 <style scoped>
 *{
     margin: 0;
