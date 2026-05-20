@@ -41,8 +41,8 @@
     <section class="card-table">
         <table class="styled-table">
             <tbody>
-                <tr v-for="f in usuarios":key=f.id_Usuario>
-                    <td><span class="text-bold">{{ f.nome }}</span></td>
+                <tr v-for="f in usuarios":key=f.id_usuarios>
+                    <td><span class="text-bold">{{ f.nome_usuario }}</span></td>
                     <td>{{ f.numero_registro_usuario }}</td>
                     <td class="badge">{{ f.function }}</td>
                     <td class="text-center">
@@ -58,30 +58,30 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import { useSupabase} from '../composables/useSupabase';
+import { useSupabase } from '../composables/useSupabase';
 const { supabase } = useSupabase();
 
 const usuarios = ref([]);
 const editandoID = ref(null);
 const form = reactive({
-    nome: '',
+    nome_usuario: '',
     numero_registro_usuario: '',
     funcao: ''
 });
 
 const carregar = async () => {
-    const { data, error } = await supabase.from('usuarios').select('*').order('nome');
+    const { data, error } = await supabase.from('usuarios').select('*').order('nome_usuario');
     if (error) {
         console.error('Error to load:', error.message);
     } else {
-        funcionarios.value = data || []
+        usuarios.value = data || []
     }
 };
 
 const prepararEdicao = (f) => {
     editandoID.value = f.id;
     Object.assign(form, {
-        nome: f.nome,
+        nome_usuario: f.nome_usuario,
         numero_registro_usuario: f.numero_registro_usuario,
         funcao: f.funcao
     })
@@ -96,7 +96,7 @@ const excluir = async (id) => {
 
 const cancelarEdicao = () => {
     editandoID.value = null;
-    Object.assign(form, { nome: '', matricula: '', funcao: '' });
+    Object.assign(form, { nome_usuario: '', numero_registro_usuario: '', funcao: '' });
 };
 
 onMounted(carregar);

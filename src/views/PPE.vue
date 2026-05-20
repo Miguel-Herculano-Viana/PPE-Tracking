@@ -1,10 +1,3 @@
-<script>
-import { useRouter } from 'vue-router'
-export default {
-    name: "PPE"
-}
-</script>
-
 <template>
     <div class="layout-container">
         <header class="Utility_bar">
