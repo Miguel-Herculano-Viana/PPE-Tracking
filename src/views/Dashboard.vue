@@ -1,17 +1,11 @@
-<script>
-import { useRouter } from 'vue-router'
-export default {
-    name: "Dashboard"
-}
-</script>
 <template>
     <div class="Shell">
         <aside class="Sidebar">
             <img class="logo" src="../assets/Group 2.png" alt="">
             <nav class="Menu">
                 <RouterLink to="/User"> User </RouterLink>
+                <RouterLink to="/Borrow_req"> Borrow Req</RouterLink>
                 <RouterLink to="/Borrow"> Borrow </RouterLink>
-                <RouterLink to="/Integrity"> Integrity </RouterLink>
                 <RouterLink to="/PPE"> PPE </RouterLink>
                 <RouterLink to="/Report"> Report </RouterLink>
             </nav>
@@ -20,22 +14,41 @@ export default {
                 <span>Sair</span>
             </button>
         </aside>
+        
         <main class="content">
-            <RouterView />
+            <div class="router-container">
+                <RouterView />
+            </div>
         </main>
     </div>
 </template>
 
+<script>
+    import { useRouter } from 'vue-router'
+    export default {
+        name: "Dashboard",
+        setup() {
+            const router = useRouter()
+            const sair = () => {
+                router.push('/login') 
+            }
+            return { sair }
+        }
+    }
+</script>
+
 <style scoped>
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 .Shell {
     display: flex;
+    width: 100vw;
     height: 100vh;
     background-color: #ffffff;
+    overflow-x: hidden; /* Evita qualquer barra de rolagem horizontal esquisita */
 }
 .Sidebar {
     padding: 30px 20px;
@@ -51,6 +64,7 @@ export default {
     outline-color: #E8E8E8;
     outline-width: 1px;
     outline-style: solid;
+    z-index: 10;
 }
 .logo {
     width: 40%;
@@ -63,7 +77,7 @@ export default {
 }
 .Menu {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     gap: 10px;
 }
 .Menu-item {
@@ -76,8 +90,36 @@ export default {
     color: #000000; 
     text-decoration: none;
 }
+
+/* --- AJUSTES DA ÁREA DE CONTEÚDO --- */
+
 .content {
-    margin-left: 27.1%;
+    /* Começa logo após a sidebar (15% margem + 12% largura = 27%) */
+    margin-left: 27%; 
     margin-top: 5%;
+    /* Garante que a área total disponível termine com a mesma margem de 15% na direita */
+    width: 58%; /* 100% - 27% (esquerda) - 15% (direita) = 58% */
+}
+
+/* O container que engloba as tabelas e impede que elas estiquem demais */
+.router-container {
+    width: 100%;
+    /* O valor abaixo impede que em monitores gigantes a tabela fique esticada ao infinito */
+    max-width: 1100px; 
+    margin: 0 auto;
+}
+
+/* Estilo básico para o botão de sair que estava faltando */
+.botaoSair {
+    margin-top: auto;
+    background-color: #8B8B8B;
+    color: white;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 </style>

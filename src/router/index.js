@@ -7,11 +7,10 @@ import Dashboard from '../views/Dashboard.vue'
 import About_Us from '../views/About_Us.vue'
 import Contacts from '../views/Contacts.vue'
 import Our_Product from '../views/Our_Product.vue'
-import Borrow from '../views/Borrow_req.vue'
-import Integrity from '../views/Integrity.vue'
+import Borrow_req from '../views/Borrow_req.vue'
+import Borrow from '../views/Borrow.vue'
 import PPE from '../views/PPE.vue'
 import Report from '../views/Report.vue'
-import Reposition from '../views/Reposition_req.vue'
 import User from '../views/User.vue'
 import { useSupabase } from '../composables/useSupabase.js'
 
@@ -28,8 +27,8 @@ const routes = [
         component: Dashboard,
         children: [
             {path: '/User', component: User},
+            {path: '/Borrow_req', component: Borrow_req},
             {path: '/Borrow', component: Borrow},
-            {path: '/Integrity', component: Integrity},
             {path: '/PPE', component: PPE},
             {path: '/Report', component: Report}
         ]
@@ -37,11 +36,10 @@ const routes = [
     {path: '/Login', component: Login},
     {path: '/Logon', component: Logon},
     {path: '/Dashboard', component: Dashboard},
+    {path: '/Borrow_req', component: Borrow_req},
     {path: '/Borrow', component: Borrow},
-    {path: '/Integrity', component: Integrity},
     {path: '/PPE', component: PPE},
     {path: '/Report', component: Report},
-    {path: '/Reposition', component: Reposition},
     {path: '/User', component: User}
 ]
 
