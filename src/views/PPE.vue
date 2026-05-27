@@ -38,7 +38,7 @@
         <form v-if="modoAba === 'ESTOQUE'" @submit.prevent="salvarAjusteEstoque" class="insertion-grid">
             <div class="input-cell cell-large">
                 <label>Selected PPE:</label>
-                <input :value="epiSelecionado.nome_epi" type="text" readonly class="input-readonly">
+                <input :value="epiSelecionado?.nome_epi" type="text" readonly class="input-readonly">
             </div>
             <div class="input-cell cell-medium">
                 <label>Operation Type:</label>
@@ -79,7 +79,7 @@
                         </span>
                     </td>
                     <td style="font-weight: bold;">
-                        {{ epi.estoque ? epi.estoque.quantidade_disponivel : 0 }} un
+                        {{ (epi.estoque && epi.estoque.length > 0) ? epi.estoque[0].quantidade_disponivel : 0 }} un
                     </td>
                     <td>
                         <div class="table-actions">
@@ -88,7 +88,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr v-if="episFiltrados.length === 0">
+                <tr v-if="!episFiltrados || episFiltrados.length === 0">
                     <td colspan="5" class="badge-info">No PPE registered or found.</td>
                 </tr>
             </tbody>
@@ -107,7 +107,7 @@ const exibirFormulario = ref(false);
 const modoAba = ref('CADASTRO');
 const epiSelecionado = ref(null);
 
-const formEpi = reactive({ nome_epi: '', validade: '', quantidade_inicial: 0 });
+const formEpi = reactive({ nome_epi: '', validade: '', quantidade_inicial: 0, is_perecivel: false });
 const formEstoque = reactive({ tipo: 'ENTRADA', quantidade: 1 });
 
 const carregarEpisComEstoque = async () => {
@@ -120,12 +120,13 @@ const carregarEpisComEstoque = async () => {
             is_perecivel,
             epi_disponivel,
             id_estoque,
-            quantidade_disponivel
+            estoque!estoque_id_epi_fkey (
+                quantidade_disponivel
+            )
         `)
         .order('nome_epi', { ascending: true });
-
     if (error) {
-        console.error("Erro ao carregar EPIs:", error);
+        console.error("Erro ao carregar EPIs:", error.message);
     } else {
         listaEpis.value = data || [];
     }
@@ -149,6 +150,7 @@ const fecharFormulario = () => {
     formEpi.nome_epi = '';
     formEpi.validade = '';
     formEpi.quantidade_inicial = 0;
+    formEpi.is_perecivel = false;
     epiSelecionado.value = null;
 };
 
@@ -170,7 +172,7 @@ const salvarNovoEPI = async () => {
     }
 
     await supabase.from('estoque').insert([{
-        quantidade_disponivel: parseInt(formEpi.quantidade_inicial),
+        quantidade_disponivel: parseInt(formEpi.quantidade_inicial) || 0,
         quantidade_minima: 2,
         id_epi: novoEpi.id_epi
     }]);
@@ -180,21 +182,51 @@ const salvarNovoEPI = async () => {
 };
 
 const salvarAjusteEstoque = async () => {
-    const { error } = await supabase.from('movimentacao').insert([
+    if (!epiSelecionado.value) return;
+
+    // 1. Calcula a nova quantidade disponível
+    const quantidadeAtual = (epiSelecionado.value.estoque && epiSelecionado.value.estoque.length > 0) 
+        ? epiSelecionado.value.estoque[0].quantidade_disponivel 
+        : 0;
+
+    const quantidadeInformada = parseInt(formEstoque.quantidade) || 0;
+    let novaQuantidade = quantidadeAtual;
+
+    if (formEstoque.tipo === 'ENTRADA') {
+        novaQuantidade += quantidadeInformada;
+    } else if (formEstoque.tipo === 'SAIDA') {
+        novaQuantidade -= quantidadeInformada;
+        if (novaQuantidade < 0) novaQuantidade = 0;
+    }
+
+    // 2. Atualiza (UPDATE) a tabela de estoque
+    const { error: errEstoque } = await supabase
+        .from('estoque')
+        .update({ quantidade_disponivel: novaQuantidade })
+        .eq('id_epi', epiSelecionado.value.id_epi);
+
+    if (errEstoque) {
+        alert("Error updating stock: " + errEstoque.message);
+        return;
+    }
+
+    // 3. Insere o registro na tabela de movimentação com as colunas corretas (baseado na sua imagem)
+    const { error: errMov } = await supabase.from('movimentacao').insert([
         {
             data_movimentecao: new Date().toISOString(),
-            quantidade_disponivel: parseInt(formEstoque.quantidade_disponivel),
+            quantidade_solicitada: quantidadeInformada, 
             tipo_movimentacao: formEstoque.tipo,
             id_epi: epiSelecionado.value.id_epi
         }
+        
     ]);
 
-    if (error) {
-        alert("Operation error: " + error.message);
-    } else {
-        fecharFormulario();
-        carregarEpisComEstoque();
+    if (errMov) {
+        console.error("Aviso: Movimentação não registrada:", errMov.message);
     }
+
+    fecharFormulario();
+    carregarEpisComEstoque();
 };
 
 const deletarEPI = async (id) => {
@@ -212,12 +244,21 @@ const formatarData = (isoString) => {
     return new Date(isoString).toLocaleDateString('pt-BR');
 };
 
+// Computado seguro: garante que não retorne undefined e trate string vazia
 const episFiltrados = computed(() => {
-    if (!pesquisa.value.trim()) return listaEpis.value;
-    return listaEpis.value.filter(e => e.nome_epi.toLowerCase().includes(pesquisa.value.toLowerCase().trim()));
+    const lista = listaEpis.value || [];
+    const termo = (pesquisa.value || '').trim().toLowerCase();
+    
+    if (!termo) return lista;
+    
+    return lista.filter(e => 
+        e.nome_epi && e.nome_epi.toLowerCase().includes(termo)
+    );
 });
 
-onMounted(carregarEpisComEstoque);
+onMounted(() => {
+    carregarEpisComEstoque();
+});
 </script>
 
 <style scoped>

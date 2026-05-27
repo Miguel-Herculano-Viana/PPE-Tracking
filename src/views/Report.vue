@@ -30,7 +30,7 @@
                             {{ m.tipo_movimentacao }}
                         </span>
                     </td>
-                    <td>{{ m.quantidade }}</td>
+                    <td>{{ m.quantidade_solicitada }}</td>
                 </tr>
                 <tr v-if="movimentacoes.length === 0">
                     <td colspan="5" class="badge-info">No movements recorded yet.</td>
@@ -41,6 +41,91 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { useSupabase } from '../composables/useSupabase';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+const { supabase } = useSupabase();
+const movimentacoes = ref([]);
+const carregando = ref(false);
+
+const carregarMovimentacoes = async () => {
+    carregando.value = true;
+    
+    // Calcula a data de 30 dias atrás
+    const trintaDiasAtras = new Date();
+    trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
+    const dataIso = trintaDiasAtras.toISOString();
+
+    const { data, error } = await supabase
+        .from('movimentacao')
+        .select(`
+            id_movimentacao,
+            data_movimentecao,
+            quantidade_solicitada,
+            tipo_movimentacao,
+            usuarios ( nome_usuario ),
+            epi ( nome_epi )
+        `)
+        .gte('data_movimentecao', dataIso) // Filtra apenas dos últimos 30 dias
+        .order('data_movimentecao', { ascending: false });
+
+    if (error) {
+        console.error('Erro ao buscar dados do relatório:', error.message);
+    } else {
+        movimentacoes.value = data || [];
+    }
+    carregando.value = false;
+};
+
+const formatarDataHora = (isoString) => {
+    if (!isoString) return '';
+    return new Date(isoString).toLocaleString('pt-BR');
+};
+
+const gerarPDF = () => {
+    if (movimentacoes.value.length === 0) {
+        alert("Não há movimentações nos últimos 30 dias para exportar.");
+        return;
+    }
+
+    const doc = new jsPDF();
+    
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("RELATÓRIO DE MOVIMENTAÇÃO (Últimos 30 Dias)", 14, 20);
+    
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 26);
+    doc.line(14, 30, 196, 30);
+
+    const linhasTabela = movimentacoes.value.map(m => [
+        formatarDataHora(m.data_movimentecao),
+        m.usuarios?.nome_usuario || 'System',
+        m.epi?.nome_epi || 'N/A',
+        m.tipo_movimentacao,
+        m.quantidade_solicitada?.toString() || '0'
+    ]);
+
+    autoTable(doc, {
+        startY: 35,
+        head: [['Data / Hora', 'Usuário', 'EPI', 'Tipo', 'Qtd']],
+        body: linhasTabela,
+        theme: 'striped',
+        headStyles: { fillColor: [166, 166, 166], textColor: [0, 0, 0] },
+        styles: { fontSize: 9 }
+    });
+
+    // O método save() do jsPDF já força o download do arquivo automaticamente no navegador
+    doc.save(`Relatorio_Movimentacao_${new Date().toISOString().slice(0,10)}.pdf`);
+};
+
+onMounted(carregarMovimentacoes);
+</script>
+
+<!-- <script setup>
 import { ref, onMounted } from 'vue';
 import { useSupabase } from '../composables/useSupabase';
 import { jsPDF } from 'jspdf';
@@ -150,7 +235,7 @@ const gerarPDF = () => {
 };
 
 onMounted(carregarMovimentacoes);
-</script>
+</script> -->
 
 <style scoped>
 * {
