@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Landing from '../views/Landing.vue'
 import Login from '../views/Login.vue'
-import Logon from '../views/Logon.vue'
 import Dashboard from '../views/Dashboard.vue'
 import About_Us from '../views/About_Us.vue'
 import Contacts from '../views/Contacts.vue'
@@ -34,7 +33,6 @@ const routes = [
         ]
     },
     {path: '/Login', component: Login},
-    {path: '/Logon', component: Logon},
     {path: '/Dashboard', component: Dashboard},
     {path: '/Borrow_req', component: Borrow_req},
     {path: '/Borrow', component: Borrow},

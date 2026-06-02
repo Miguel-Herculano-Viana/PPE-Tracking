@@ -104,7 +104,12 @@ const form = reactive({
 });
 
 const carregar = async () => {
-    const { data, error } = await supabase.from('usuarios').select('*').order('nome_usuario');
+    const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('ativo', true) // Filtro crucial
+        .order('nome_usuario');
+        
     if (error) {
         console.error('Error to load users:', error.message);
     } else {
@@ -160,9 +165,17 @@ const prepararEdicao = (u) => {
 };
 
 const excluir = async (id_enviado) => {
-    if (confirm('Are you sure you want to delete this user?')) {
-        await supabase.from('usuarios').delete().eq('id_usuarios', id_enviado);
-        carregar();
+    if (confirm('Are you sure you want to remove this user?')) {
+        const { error } = await supabase
+            .from('usuarios')
+            .update({ ativo: false })
+            .eq('id_usuarios', id_enviado);
+            
+        if (error) {
+            alert("Error removing user: " + error.message);
+        } else {
+            carregar();
+        }
     }
 };
 

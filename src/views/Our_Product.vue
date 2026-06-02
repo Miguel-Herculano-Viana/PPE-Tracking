@@ -27,6 +27,45 @@ and anytime you want by logging into our system and navigating through our dashb
     </body>
 
 </template>
-<style>
-/*  */
+
+<style scoped>
+body {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: sans-serif;
+    font-size: 32px;
+    font-style: italic;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-family: sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    color: #000000;
+    line-height: 1.4;
+    text-align: left;
+    margin: 8px 0;
+}
+
+/* Coloca as duas imagens finais lado a lado */
+img {
+    width: 49%;
+    height: 250px;
+    object-fit: cover;
+    margin-top: 30px;
+    display: inline-block;
+}
+
+/* Dá um pequeno espaçamento entre a primeira e a segunda imagem */
+img:nth-of-type(1) {
+    margin-right: 2%;
+}
 </style>

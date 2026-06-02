@@ -23,7 +23,13 @@
             </div>
             <div class="input-cell cell-medium">
                 <label>Expiration Date:</label>
-                <input v-model="formEpi.validade" type="date" required>
+                <input 
+                    v-model="formEpi.validade" 
+                    type="date" 
+                    :required="formEpi.is_perecivel"
+                    :disabled="!formEpi.is_perecivel"
+                    :class="{ 'input-readonly': !formEpi.is_perecivel }"
+                >
             </div>
             <div class="input-cell cell-small">
                 <label>Initial Qty:</label>
@@ -72,7 +78,10 @@
             <tbody>
                 <tr v-for="epi in episFiltrados" :key="epi.id_epi">
                     <td style="text-align: left; padding-left: 15px;">{{ epi.nome_epi }}</td>
-                    <td>{{ formatarData(epi.validade) }}</td>
+                    <td>
+                        <span v-if="!epi.is_perecivel" class="badge-info">Non-Perishable</span>
+                        <span v-else>{{ formatarData(epi.validade) }}</span>
+                    </td>
                     <td>
                         <span :class="epi.epi_disponivel ? 'txt-disponivel' : 'txt-esgotado'">
                             {{ epi.epi_disponivel ? 'In Stock' : 'Out of Stock' }}
@@ -120,17 +129,21 @@ const carregarEpisComEstoque = async () => {
             is_perecivel,
             epi_disponivel,
             id_estoque,
+            ativo,
             estoque!estoque_id_epi_fkey (
                 quantidade_disponivel
             )
         `)
+        .eq('ativo', true) // <-- Garante que os inativos nunca cheguem à tela
         .order('nome_epi', { ascending: true });
+
     if (error) {
         console.error("Erro ao carregar EPIs:", error.message);
     } else {
         listaEpis.value = data || [];
     }
 };
+
 
 const abrirCadastro = () => {
     modoAba.value = 'CADASTRO';
@@ -155,11 +168,14 @@ const fecharFormulario = () => {
 };
 
 const salvarNovoEPI = async () => {
+    // Tratamento de segurança: Se não for perecível, forçamos a data a ser nula
+    const validadeFinal = formEpi.is_perecivel ? formEpi.validade : null;
+
     const { data: novoEpi, error: errEpi } = await supabase
         .from('epi')
         .insert([{
             nome_epi: formEpi.nome_epi,
-            validade: formEpi.validade,
+            validade: validadeFinal, // Usamos a variável tratada aqui
             is_perecivel: formEpi.is_perecivel,
             epi_disponivel: formEpi.quantidade_inicial > 0
         }])
@@ -180,6 +196,7 @@ const salvarNovoEPI = async () => {
     fecharFormulario();
     carregarEpisComEstoque();
 };
+
 
 const salvarAjusteEstoque = async () => {
     if (!epiSelecionado.value) return;
@@ -230,14 +247,23 @@ const salvarAjusteEstoque = async () => {
 };
 
 const deletarEPI = async (id) => {
-    if (!confirm("Are you sure you want to delete this equipment?")) return;
+    if (!confirm("Are you sure you want to remove this equipment?")) return;
     
-    await supabase.from('estoque').delete().eq('id_epi', id);
-    const { error } = await supabase.from('epi').delete().eq('id_epi', id);
+    // 1. Faz o "Soft Delete" no banco de dados
+    const { error } = await supabase
+        .from('epi')
+        .update({ ativo: false })
+        .eq('id_epi', id);
     
-    if (error) alert("Error deleting: " + error.message);
-    else carregarEpisComEstoque();
+    if (error) {
+        alert("Error removing PPE: " + error.message);
+    } else {
+        // 2. A MÁGICA NA TELA: Removemos o item da array local imediatamente!
+        // O Vue vai reagir a isto e fazer a linha da tabela sumir num piscar de olhos.
+        listaEpis.value = listaEpis.value.filter(epi => epi.id_epi !== id);
+    }
 };
+
 
 const formatarData = (isoString) => {
     if (!isoString) return '';

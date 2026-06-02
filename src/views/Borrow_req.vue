@@ -103,10 +103,11 @@ const carregarEpisDisponiveis = async () => {
     const { data, error } = await supabase
         .from('epi')
         .select(`
-            id_epi, nome_epi, validade, is_perecivel, epi_disponivel,
+            id_epi, nome_epi, validade, is_perecivel, epi_disponivel, ativo,
             estoque!estoque_id_epi_fkey ( quantidade_disponivel )
         `)
         .eq('epi_disponivel', true)
+        .eq('ativo', true) // <-- Filtro adicionado para carregar apenas os EPIs ativos
         .order('nome_epi');
 
     if (error) {
@@ -117,7 +118,6 @@ const carregarEpisDisponiveis = async () => {
         );
     }
 };
-
 const getQuantidade = (epi) => {
     if (!epi || !epi.estoque || epi.estoque.length === 0) return 0;
     return epi.estoque[0].quantidade_disponivel;

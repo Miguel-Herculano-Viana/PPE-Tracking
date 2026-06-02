@@ -30,7 +30,7 @@
         setup() {
             const router = useRouter()
             const sair = () => {
-                router.push('/login') 
+                router.push('/') 
             }
             return { sair }
         }
